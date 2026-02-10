@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Speaking Part 3 – Intro & Dictation Practice | Modern English Australia</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f7f8fa;
+      --ink:#121417;
+      --muted:#5a6470;
+      --line:rgba(18,20,23,.14);
+      --soft:rgba(18,20,23,.06);
+      --accent:#ff7a1a;
+      --radius:14px;
+      --max:1200px;
+
+      --ok: rgba(0,120,60,1);
+      --warn: rgba(160,90,0,1);
+      --err: rgba(170,0,0,1);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    /* ===== Nav (same template) ===== */
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+    }
+    .navInner{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .navLeft, .navMid, .navRight{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .navMid{
+      margin-left:auto;
+      margin-right:auto;
+      justify-content:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .brand .top{
+      font-family:Newsreader, Georgia, serif;
+      font-weight:700;
+      font-size:18px;
+      letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .brand .sub{
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .iconBtn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+    .iconBtn:hover{ transform: translateY(-1px); border-color: rgba(18,20,23,.26); }
+    .iconBtn:active{ transform: translateY(0px); }
+
+    .homeBtn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      height:44px;
+      padding:0 14px;
+      border-radius:999px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      letter-spacing:.1px;
+      transition: transform .12s ease, border-color .12s ease;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .homeBtn:hover{ transform: translateY(-1px); border-color: rgba(18,20,23,.26); }
+    .homeBtn:active{ transform: translateY(0px); }
+    .dot{ width:10px;height:10px;border-radius:50%; background: var(--accent); }
+
+    /* Timer */
+    .timerPill{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:#fff;
+      font-variant-numeric: tabular-nums;
+    }
+    .timerPill b{
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .time{
+      font-weight:800;
+      letter-spacing:.3px;
+      min-width:60px;
+      text-align:center;
+    }
+    .tinyBtn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      height:36px;
+      padding:0 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:700;
+      transition: transform .12s ease, border-color .12s ease;
+      white-space:nowrap;
+    }
+    .tinyBtn:hover{ transform: translateY(-1px); border-color: rgba(18,20,23,.26); }
+    .tinyBtn:active{ transform: translateY(0px); }
+
+    /* QR panel */
+    .qrWrap{ position:relative; }
+    .qrPanel{
+      position:absolute;
+      top:56px;
+      left:0;
+      width:min(320px, calc(100vw - 24px));
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding:12px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.12);
+      display:none;
+    }
+    .qrPanel.open{ display:block; }
+    .qrTitle{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .qrTitle b{ font-size:13px; }
+    .qrPanel .close{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:10px;
+      padding:6px 10px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    #qrCode{
+      width:200px;
+      height:200px;
+      margin:0 auto 10px;
+      display:grid;
+      place-items:center;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:12px;
+    }
+    .qrUrl{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.45;
+      word-break:break-all;
+      border-top:1px solid var(--line);
+      padding-top:10px;
+    }
+
+    /* Main */
+    .wrap{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:22px 16px 30px;
+    }
+
+    .lead{
+      border-left:3px solid var(--accent);
+      padding-left:14px;
+      margin-bottom:18px;
+    }
+    .lead .label{
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:11px;
+      font-weight:700;
+      color:var(--muted);
+    }
+    .lead h1{
+      margin:8px 0 6px;
+      font-family:Newsreader, Georgia, serif;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:.2px;
+    }
+    .lead p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      max-width: 90ch;
+    }
+
+    .section{
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid var(--line);
+    }
+    .section h2{
+      margin:0 0 10px;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .section p{
+      margin:0 0 10px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    /* Dictation list */
+    .dictation{
+      display:grid;
+      gap:12px;
+    }
+    .item{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius: var(--radius);
+      padding:12px;
+      display:grid;
+      gap:10px;
+    }
+    .itemTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      color:var(--muted);
+      background:#fff;
+      white-space:nowrap;
+    }
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      height:44px;
+      padding:0 14px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:800;
+      letter-spacing:.1px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease, color .12s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(18,20,23,.26); }
+    .btn:active{ transform: translateY(0px); }
+    .btn.primary{
+      border:2px solid var(--accent);
+    }
+    .btn.primary:hover{
+      background: var(--accent);
+      color:#fff;
+      border-color: var(--accent);
+    }
+
+    input[type="text"]{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding:12px;
+      font: 14px/1.4 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      outline:none;
+      background:#fff;
+      color:var(--ink);
+    }
+    input[type="text"]:focus{
+      border-color: rgba(255,122,26,.55);
+      box-shadow: 0 0 0 3px rgba(255,122,26,.12);
+    }
+
+    .feedback{
+      font-size:13px;
+      line-height:1.45;
+      color:var(--muted);
+    }
+    .ok{ color: var(--ok); font-weight:900; }
+    .warn{ color: var(--warn); font-weight:900; }
+    .err{ color: var(--err); font-weight:900; }
+
+    .answer{
+      display:none;
+      font-size:13px;
+      color:var(--muted);
+      border-top:1px solid var(--line);
+      padding-top:10px;
+    }
+    .answer code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+      background: rgba(18,20,23,.05);
+      padding:2px 6px;
+      border-radius:8px;
+    }
+
+    .sysNote{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    /* Next button */
+    .nextWrap{
+      max-width:var(--max);
+      margin:28px auto 0;
+      padding:0 16px;
+      display:flex;
+      justify-content:flex-end;
+    }
+    .nextBtn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:14px 22px;
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:.2px;
+      color:var(--ink);
+      text-decoration:none;
+      border:2px solid var(--accent);
+      border-radius:999px;
+      background:#fff;
+      transition:transform .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
+      white-space:nowrap;
+    }
+    .nextBtn:hover{
+      background:var(--accent);
+      color:#fff;
+      transform:translateY(-1px);
+    }
+    .nextBtn:active{ transform:translateY(0); }
+
+    @media (max-width: 520px){
+      .brand .sub{ display:none; }
+      .homeBtn span{ display:none; }
+      .homeBtn{ padding:0 12px; }
+      .nextWrap{ justify-content:center; }
+      .navMid{ display:none; }
+    }
+
+    footer{
+      border-top:1px solid var(--line);
+      background:#fff;
+    }
+    .foot{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:14px 16px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <div class="navInner">
+      <div class="navLeft">
+        <div class="qrWrap">
+          <button class="iconBtn" id="qrToggle" type="button" aria-label="Open QR code">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10 0h2v2h-2v-2zm-2-2h6v6h-2v-4h-4v-2zm8 8h-6v-6h2v4h4v2z"/>
+            </svg>
+          </button>
+
+          <div class="qrPanel" id="qrPanel" role="dialog" aria-label="QR code panel" aria-modal="false">
+            <div class="qrTitle">
+              <b>QR code for this page</b>
+              <button class="close" id="qrClose" type="button" aria-label="Close QR panel">Close</button>
+            </div>
+            <div id="qrCode" aria-label="QR code"></div>
+            <div class="qrUrl" id="qrUrl"></div>
+          </div>
+        </div>
+
+        <div class="brand">
+          <div class="top">Modern English Australia</div>
+          <div class="sub">Speaking Part 3 • Intro • Write from Dictation</div>
+        </div>
+      </div>
+
+      <div class="navMid" aria-label="Timer controls">
+        <div class="timerPill">
+          <b>Timer</b>
+          <span class="time" id="timer">03:00</span>
+        </div>
+        <button class="tinyBtn" id="startBtn" type="button">Start</button>
+        <button class="tinyBtn" id="pauseBtn" type="button">Pause</button>
+        <button class="tinyBtn" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <div class="navRight">
+        <a class="homeBtn" href="https://koalaspiessydney.github.io/ModernEnglish-Au/IELTSPTEPLUS.html" id="homeBtn" aria-label="Home">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Home</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="wrap">
+      <div class="lead">
+        <div class="label">practice</div>
+        <h1>Write from Dictation: Part 3 step phrases</h1>
+        <p>
+          Press Play to hear a useful Part 3 phrase. Type the sentence exactly in the box, then check your answer.
+        </p>
+      </div>
+
+      <div class="section">
+        <h2>Dictation set</h2>
+        <p>
+          Focus on small grammar words (a, the, to, of) and punctuation. You can replay as many times as you like.
+        </p>
+
+        <div class="dictation" id="dictationList"></div>
+
+        <div class="sysNote" id="sysNote"></div>
+      </div>
+    </div>
+
+    <div class="nextWrap">
+      <a href="Set1.html" class="nextBtn" aria-label="Next task">Next →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot">
+      <div>© Modern English Australia</div>
+      <div>Write from Dictation • client-side audio</div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    (function(){
+      // ============================================================
+      // TIMER (3:00)
+      // ============================================================
+      const timerEl = document.getElementById("timer");
+      const startBtn = document.getElementById("startBtn");
+      const pauseBtn = document.getElementById("pauseBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      const TOTAL = 3 * 60;
+      let remaining = TOTAL;
+      let running = false;
+      let t = null;
+
+      function fmt(s){
+        const m = Math.floor(s / 60);
+        const r = s % 60;
+        return String(m).padStart(2,"0") + ":" + String(r).padStart(2,"0");
+      }
+      function render(){
+        timerEl.textContent = fmt(remaining);
+        if(remaining <= 15 && remaining > 0){
+          timerEl.style.color = "rgba(184, 121, 0, 1)";
+        } else if(remaining === 0){
+          timerEl.style.color = "rgba(180, 0, 0, 1)";
+        } else {
+          timerEl.style.color = "var(--ink)";
+        }
+      }
+      function tick(){
+        if(!running) return;
+        remaining = Math.max(0, remaining - 1);
+        render();
+        if(remaining === 0){
+          running = false;
+          clearInterval(t);
+          t = null;
+        }
+      }
+      startBtn.addEventListener("click", () => {
+        if(running) return;
+        running = true;
+        if(!t) t = setInterval(tick, 1000);
+      });
+      pauseBtn.addEventListener("click", () => { running = false; });
+      resetBtn.addEventListener("click", () => {
+        running = false;
+        remaining = TOTAL;
+        render();
+        if(t){ clearInterval(t); t = null; }
+      });
+      render();
+
+      // ============================================================
+      // QR GENERATOR (Top Left)
+      // ============================================================
+      const qrToggle = document.getElementById("qrToggle");
+      const qrPanel  = document.getElementById("qrPanel");
+      const qrClose  = document.getElementById("qrClose");
+      const qrBox    = document.getElementById("qrCode");
+      const qrUrl    = document.getElementById("qrUrl");
+
+      let qrMade = false;
+
+      function makeQR(){
+        const url = window.location.href;
+        qrUrl.textContent = url;
+        qrBox.innerHTML = "";
+        new QRCode(qrBox, { text:url, width:200, height:200, correctLevel: QRCode.CorrectLevel.M });
+        qrMade = true;
+      }
+      function openQR(){ qrPanel.classList.add("open"); if(!qrMade) makeQR(); }
+      function closeQR(){ qrPanel.classList.remove("open"); }
+      function toggleQR(){ qrPanel.classList.contains("open") ? closeQR() : openQR(); }
+
+      qrToggle.addEventListener("click", toggleQR);
+      qrClose.addEventListener("click", closeQR);
+      document.addEventListener("click", (e) => {
+        const inside = qrPanel.contains(e.target) || qrToggle.contains(e.target);
+        if(!inside) closeQR();
+      });
+      document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeQR(); });
+
+      // ============================================================
+      // DICTATION (client-side audio via Speech Synthesis)
+      // ============================================================
+      const items = [
+        "Let’s start by looking at the options.",
+        "I think this one is more practical.",
+        "One advantage is that it’s easy to organise.",
+        "However, the main drawback is the cost.",
+        "Shall we choose this one and that one?",
+        "So we agree those two are the best choices."
+      ];
+
+      const list = document.getElementById("dictationList");
+      const sysNote = document.getElementById("sysNote");
+
+      function normalize(s){
+        return s
+          .toLowerCase()
+          .replace(/[’']/g, "'")
+          .replace(/[“”]/g, '"')
+          .replace(/[^a-z0-9\s'"]/g, "")   // remove punctuation (except quotes/apostrophes)
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function speak(text){
+        if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return false;
+        window.speechSynthesis.cancel();
+
+        const u = new SpeechSynthesisUtterance(text);
+
+        // Pick a reasonable English voice if available (best-effort).
+        const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+        const preferred = voices.find(v => /en-au/i.test(v.lang)) ||
+                          voices.find(v => /en-gb/i.test(v.lang)) ||
+                          voices.find(v => /en-us/i.test(v.lang)) ||
+                          voices.find(v => /^en/i.test(v.lang));
+        if(preferred) u.voice = preferred;
+
+        u.rate = 0.95;  // slightly slower for dictation
+        u.pitch = 1.0;
+        window.speechSynthesis.speak(u);
+        return true;
+      }
+
+      // Ensure voices load (some browsers populate voices async)
+      function initVoices(){
+        try { window.speechSynthesis.getVoices(); } catch(e) {}
+      }
+      initVoices();
+      if("speechSynthesis" in window){
+        window.speechSynthesis.onvoiceschanged = initVoices;
+      }
+
+      const supported = ("speechSynthesis" in window) && ("SpeechSynthesisUtterance" in window);
+      sysNote.innerHTML = supported
+        ? "Audio is generated in your browser. If a student device has no voice, use a different browser (Chrome usually works well)."
+        : "Audio is not supported in this browser. You can replace the Play button with an MP3 later if needed.";
+
+      items.forEach((sentence, i) => {
+        const idx = i + 1;
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <div class="itemTop">
+            <div class="tag">Sentence ${idx}</div>
+            <div class="controls">
+              <button class="btn primary" type="button" data-play="${i}">Play</button>
+              <button class="btn" type="button" data-repeat="${i}">Play again</button>
+            </div>
+          </div>
+
+          <input type="text" inputmode="text" autocomplete="off" autocapitalize="sentences"
+            spellcheck="false" data-input="${i}" placeholder="Type the sentence here…" />
+
+          <div class="controls">
+            <button class="btn primary" type="button" data-check="${i}">Check</button>
+            <button class="btn" type="button" data-clear="${i}">Clear</button>
+            <button class="btn" type="button" data-show="${i}">Show answer</button>
+          </div>
+
+          <div class="feedback" data-feedback="${i}" aria-live="polite"></div>
+          <div class="answer" data-answer="${i}">Answer: <code>${sentence}</code></div>
+        `;
+        list.appendChild(el);
+      });
+
+      // Event delegation for buttons
+      list.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if(!btn) return;
+
+        const playIdx = btn.getAttribute("data-play");
+        const repIdx  = btn.getAttribute("data-repeat");
+        const checkIdx= btn.getAttribute("data-check");
+        const clearIdx= btn.getAttribute("data-clear");
+        const showIdx = btn.getAttribute("data-show");
+
+        if(playIdx !== null || repIdx !== null){
+          const i = Number(playIdx !== null ? playIdx : repIdx);
+          const ok = speak(items[i]);
+          const fb = list.querySelector(`[data-feedback="${i}"]`);
+          if(!ok){
+            fb.innerHTML = `<span class="warn">Audio not available on this browser.</span>`;
+          } else {
+            fb.textContent = "";
+          }
+          return;
+        }
+
+        if(checkIdx !== null){
+          const i = Number(checkIdx);
+          const input = list.querySelector(`[data-input="${i}"]`);
+          const fb = list.querySelector(`[data-feedback="${i}"]`);
+          const target = items[i];
+
+          const user = input.value.trim();
+          if(!user){
+            fb.innerHTML = `<span class="warn">Type your answer first.</span>`;
+            return;
+          }
+
+          if(normalize(user) === normalize(target)){
+            fb.innerHTML = `<span class="ok">Correct.</span>`;
+          } else {
+            fb.innerHTML = `<span class="err">Not quite. Try again.</span>`;
+          }
+          return;
+        }
+
+        if(clearIdx !== null){
+          const i = Number(clearIdx);
+          const input = list.querySelector(`[data-input="${i}"]`);
+          const fb = list.querySelector(`[data-feedback="${i}"]`);
+          const ans = list.querySelector(`[data-answer="${i}"]`);
+          input.value = "";
+          fb.textContent = "";
+          ans.style.display = "none";
+          input.focus();
+          return;
+        }
+
+        if(showIdx !== null){
+          const i = Number(showIdx);
+          const ans = list.querySelector(`[data-answer="${i}"]`);
+          ans.style.display = (ans.style.display === "block") ? "none" : "block";
+          return;
+        }
+      });
+
+      // Enter to check
+      list.addEventListener("keydown", (e) => {
+        const input = e.target.closest('input[data-input]');
+        if(!input) return;
+        if(e.key !== "Enter") return;
+
+        const i = Number(input.getAttribute("data-input"));
+        const checkBtn = list.querySelector(`button[data-check="${i}"]`);
+        if(checkBtn) checkBtn.click();
+      });
+    })();
+  </script>
+</body>
+</html>
